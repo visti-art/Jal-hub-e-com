@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="JAL HUB - Secure Admin & E-Commerce Platform">
+    <meta name="keywords" content="JAL HUB, Secure Shopping, Video Upload, GST Invoice, Admin Panel">
+    <meta name="author" content="JAY P. SINGH & ALOK MEHTA">
+    <meta name="robots" content="index, follow">
+    <title>JAL HUB - Secure Admin, E-Commerce & Video Platform</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: linear-gradient(to right, #1e3c72, #2a5298); color: white; margin: 0; padding: 10px; }
+        h1 { font-size: 26px; font-weight: bold; color: #FFD700; }
+        .container, .admin-dashboard, .order-history, .video-section, .categories, .upload-section {
+            background: rgba(255, 255, 255, 0.15); padding: 15px; border-radius: 10px; margin: 10px auto; width: 95%;
+        }
+        input, button, textarea, select { padding: 10px; margin: 5px; border-radius: 5px; border: none; width: 90%; }
+        button { background: gold; cursor: pointer; }
+        .hidden { display: none; }
+        .thumbnail { width: 100px; height: 60px; border-radius: 5px; margin-top: 5px; }
+        .box-container { display: flex; flex-wrap: wrap; justify-content: space-around; }
+        .box { background: white; color: black; padding: 10px; margin: 5px; border-radius: 10px; width: 200px; text-align: center; }
+        
+        /* Sidebar Menu */
+        .menu-icon { position: fixed; top: 10px; left: 10px; font-size: 24px; cursor: pointer; z-index: 1000; }
+        .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #222; padding: 20px; transition: 0.3s; }
+        .sidebar a { display: block; color: white; text-decoration: none; padding: 10px; border-bottom: 1px solid gray; }
+        .sidebar a:hover { background: #444; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Menu Icon -->
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar" id="sidebar">
+        <a href="#" onclick="viewOrders()">📦 View Orders</a>
+        <a href="#" onclick="viewUsers()">👤 View Users</a>
+        <a href="#" onclick="viewPayments()">💰 View Payments</a>
+        <a href="#" onclick="viewProducts()">🛍️ View Product Listings</a>
+        <a href="#" onclick="viewGST()">📜 View GST Details</a>
+        <a href="#" onclick="viewFutureFeatures()">🚀 Future Features</a>
+        <a href="#" onclick="toggleSidebar()">❌ Close</a>
+    </div>
+
+    <h1>🌟 JAL HUB - Secure Admin, E-Commerce & Video Platform 🎥🛍️</h1>
+
+    <!-- Product Categories -->
+    <div class="categories">
+        <h2>🛒 Browse Products by Category</h2>
+        <div class="box-container">
+            <div class="box">Electronics</div>
+            <div class="box">Fashion</div>
+            <div class="box">Home & Kitchen</div>
+            <div class="box">Grocery</div>
+            <div class="box">Toys</div>
+        </div>
+    </div>
+
+    <!-- Product Upload Section -->
+    <div class="upload-section">
+        <h2>🛍️ Upload Product</h2>
+        <input type="text" id="productName" placeholder="Product Name">
+        <input type="text" id="productPrice" placeholder="Product Price">
+        <button onclick="uploadProduct()">Upload Product</button>
+        <p id="productMessage"></p>
+    </div>
+
+    <!-- Video Upload Section -->
+    <div class="video-section">
+        <h2>🎬 Upload Video</h2>
+        <input type="text" id="videoLink" placeholder="Enter Video Link">
+        <button onclick="uploadVideo()">Upload</button>
+        <p id="videoMessage"></p>
+        <h3>📹 Uploaded Videos</h3>
+        <div id="videoList"></div>
+    </div>
+
+    <script>
+        let uploadedProducts = [];
+        let uploadedVideos = [];
+
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebar");
+            sidebar.style.left = (sidebar.style.left === "0px") ? "-250px" : "0px";
+        }
+
+        function uploadProduct() {
+            let name = document.getElementById("productName").value;
+            let price = document.getElementById("productPrice").value;
+            
+            if (!name || !price) {
+                alert("❌ Please enter product name and price!");
+                return;
+            }
+
+            uploadedProducts.push({ name, price });
+            localStorage.setItem("uploadedProducts", JSON.stringify(uploadedProducts));
+            document.getElementById("productMessage").innerText = "✅ Product Uploaded Successfully!";
+        }
+
+        function uploadVideo() {
+            let videoLink = document.getElementById("videoLink").value;
+            if (!videoLink.includes("youtube.com") && !videoLink.includes("vimeo.com")) {
+                alert("❌ Please enter a valid YouTube or Vimeo link!");
+                return;
+            }
+
+            let videoID = videoLink.split("v=")[1] || videoLink.split("/").pop();
+            let thumbnailURL = `https://img.youtube.com/vi/${videoID}/hqdefault.jpg`;
+
+            uploadedVideos.push({ videoLink, thumbnailURL });
+            localStorage.setItem("uploadedVideos", JSON.stringify(uploadedVideos));
+            document.getElementById("videoMessage").innerText = "✅ Video Uploaded Successfully!";
+            displayVideos();
+        }
+
+        function displayVideos() {
+            let videoList = document.getElementById("videoList");
+            videoList.innerHTML = "";
+            uploadedVideos.forEach(video => {
+                videoList.innerHTML += `<div><img src="${video.thumbnailURL}" class="thumbnail"><br><a href="${video.videoLink}" target="_blank">Watch Video</a></div>`;
+            });
+        }
+
+        window.onload = function() {
+            displayVideos();
+        };
+    </script>
+
+</body>
+</html>
